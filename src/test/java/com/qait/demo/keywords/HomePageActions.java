@@ -158,11 +158,13 @@ public class HomePageActions extends GetPage {
 	}
 
 	public void clickSearchIcon() {
+            element("searchButton").click();
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void clickFirstProduct() {
+            element("firstImage").click();
 		// TODO Auto-generated method stub
 		
 	}

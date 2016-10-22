@@ -24,26 +24,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
 
 public class GetPage extends BaseUi {
-
+    
     protected WebDriver webdriver;
     String pageName;
     LayoutValidation layouttest;
-
+    String windowHandle;
+    
     public GetPage(WebDriver driver, String pageName) {
         super(driver, pageName);
         this.webdriver = driver;
         this.pageName = pageName;
         layouttest = new LayoutValidation(driver, pageName);
     }
-
+    
     public void testPageLayout(List<String> tagsToBeTested) {
         layouttest.checklayout(tagsToBeTested);
     }
-
+    
     public void testPageLayout(String tagToBeTested) {
         testPageLayout(Arrays.asList(tagToBeTested));
     }
-
+    
     public void testPageLayout() {
         testPageLayout(Arrays.asList(getProperty("./Config.properties", "browser")));
     }
@@ -57,11 +58,11 @@ public class GetPage extends BaseUi {
                     .trim()));
         }
     }
-
+    
     protected WebElement element(String elementToken) {
         return element(elementToken, "");
     }
-
+    
     protected WebElement element(String elementToken, String replacement1, String replacement2)
             throws NoSuchElementException {
         WebElement elem = null;
@@ -73,7 +74,7 @@ public class GetPage extends BaseUi {
         }
         return elem;
     }
-
+    
     protected WebElement element(String elementToken, String replacement)
             throws NoSuchElementException {
         WebElement elem = null;
@@ -85,41 +86,46 @@ public class GetPage extends BaseUi {
         }
         return elem;
     }
-
+    
     protected List<WebElement> elements(String elementToken, String replacement) {
         return wait.waitForElementsToBeVisible(webdriver.findElements(getLocator(
                 elementToken, replacement)));
     }
-
+    
     protected List<WebElement> elements(String elementToken, String replacement1, String replacement2) {
         return webdriver.findElements(getLocator(elementToken, replacement1, replacement2));
     }
-
+    
     protected List<WebElement> elements(String elementToken) {
         return elements(elementToken, "");
     }
-
+    
     protected void _waitForElementToDisappear(String elementToken, String replacement) {
-    	int i = 0;
+        int i = 0;
         int initTimeout = wait.getTimeout();
         wait.resetImplicitTimeout(2);
         int count;
         while (i <= 20) {
-        	if (replacement.isEmpty()) count = elements(elementToken).size();
-        	else count = elements(elementToken, replacement).size();
-        	if (count == 0) break;
-        	i += 2;
+            if (replacement.isEmpty()) {
+                count = elements(elementToken).size();
+            } else {
+                count = elements(elementToken, replacement).size();
+            }
+            if (count == 0) {
+                break;
+            }
+            i += 2;
         }
         wait.resetImplicitTimeout(initTimeout);
     }
-
-    protected void waitForElementToDisappear(String elementToken){
-		_waitForElementToDisappear(elementToken, "");
-	}
-
-    protected void waitForElementToDisappear(String elementToken, String replacement){
-		_waitForElementToDisappear(elementToken, replacement);
-	}
+    
+    protected void waitForElementToDisappear(String elementToken) {
+        _waitForElementToDisappear(elementToken, "");
+    }
+    
+    protected void waitForElementToDisappear(String elementToken, String replacement) {
+        _waitForElementToDisappear(elementToken, replacement);
+    }
     
     protected void isStringMatching(String actual, String expected) {
         Assert.assertEquals(actual, expected);
@@ -127,7 +133,7 @@ public class GetPage extends BaseUi {
         logMessage("EXPECTED STRING :" + expected);
         logMessage("String compare Assertion passed.");
     }
-
+    
     protected boolean isElementDisplayed(String elementName,
             String elementTextReplace) {
         wait.waitForElementToBeVisible(element(elementName, elementTextReplace));
@@ -138,10 +144,12 @@ public class GetPage extends BaseUi {
                 + elementTextReplace + " is displayed.");
         return result;
     }
-
+    
     protected void verifyElementText(String elementName, String expectedText) {
         wait.waitForElementToBeVisible(element(elementName));
-        assertEquals(element(elementName).getText().trim(), expectedText,
+        logMessage(element(elementName).getText().trim().toLowerCase());
+        logMessage(expectedText.toLowerCase());
+        assertTrue(element(elementName).getText().trim().toLowerCase().contains(expectedText.toLowerCase()),
                 "TEST FAILED: element '" + elementName
                 + "' Text is not as expected: ");
         logMessage("TEST PASSED: element " + elementName
@@ -150,12 +158,12 @@ public class GetPage extends BaseUi {
     
     protected void verifyElementTextContains(String elementName, String expectedText) {
         wait.waitForElementToBeVisible(element(elementName));
-        assertThat("TEST FAILED: element '" + elementName + "' Text is not as expected: ", 
+        assertThat("TEST FAILED: element '" + elementName + "' Text is not as expected: ",
                 element(elementName).getText().trim(), containsString(expectedText));
         logMessage("TEST PASSED: element " + elementName
                 + " is visible and Text is " + expectedText);
     }
-
+    
     protected boolean isElementDisplayed(String elementName) {
         wait.waitForElementToBeVisible(element(elementName));
         boolean result = element(elementName).isDisplayed();
@@ -165,7 +173,7 @@ public class GetPage extends BaseUi {
                 + " is displayed.");
         return result;
     }
-
+    
     protected boolean isElementEnabled(String elementName, boolean expected) {
         wait.waitForElementToBeVisible(element(elementName));
         boolean result = expected && element(elementName).isEnabled();
@@ -175,24 +183,24 @@ public class GetPage extends BaseUi {
                 + " is enabled :- " + expected);
         return result;
     }
-
+    
     protected By getLocator(String elementToken) {
         return getLocator(elementToken, "");
     }
-
+    
     protected By getLocator(String elementToken, String replacement) {
         String[] locator = getELementFromFile(this.pageName, elementToken);
         locator[2] = locator[2].replaceAll("\\$\\{.+\\}", replacement);
         return getBy(locator[1].trim(), locator[2].trim());
     }
-
+    
     protected By getLocator(String elementToken, String replacement1, String replacement2) {
         String[] locator = getELementFromFile(this.pageName, elementToken);
         locator[2] = StringUtils.replace(locator[2], "$", replacement1);
         locator[2] = StringUtils.replace(locator[2], "%", replacement2);
         return getBy(locator[1].trim(), locator[2].trim());
     }
-
+    
     private By getBy(String locatorType, String locatorValue) {
         switch (Locators.valueOf(locatorType)) {
             case id:
@@ -209,6 +217,13 @@ public class GetPage extends BaseUi {
                 return By.linkText(locatorValue);
             default:
                 return By.id(locatorValue);
+        }
+    }
+    
+    public void switchToNewWindow() {
+        windowHandle = driver.getWindowHandle();
+        for (String winHandle : driver.getWindowHandles()) {
+            driver.switchTo().window(winHandle);
         }
     }
 }

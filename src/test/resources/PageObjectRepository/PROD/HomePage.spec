@@ -12,5 +12,9 @@ sent_mails		    xpath	//*[@id='zti__main_Mail__5_textCell']
 list_mails 		    xpath	//ul[@id='zl__CLV-main__rows']
 mail_span		    xpath	//*[@id='zlif__CLV-main__811__su']/span
 textbox_Search     id 		inputValEnter
+addToCart               xpath               //div[@id='add-cart-button-id']/span
+prodCheckoutPage        css                 a[href*='proceedToCheckoutPage']
+searchButton            xpath               //button[@onclick="submitSearchForm('go_header');"]
+firstImage              xpath               (//img[contains(@class,'product-image')])[1]
 
 ====================================================================================

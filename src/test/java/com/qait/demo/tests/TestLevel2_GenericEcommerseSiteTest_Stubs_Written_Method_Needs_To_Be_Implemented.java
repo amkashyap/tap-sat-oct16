@@ -47,28 +47,28 @@ public class TestLevel2_GenericEcommerseSiteTest_Stubs_Written_Method_Needs_To_B
 		baseUrl = getYamlValue("baseUrl");
 	}
 	
-	@Test()
+	@Test
 	public void TestStep1_SearchProduct(){
 		test.homePage.enterProductName(getYamlValue("productName"));
 		test.homePage.clickSearchIcon();
 	}
 	
-	@Test()
+	@Test
 	public void TestStep2_VerifySearchResult(){
 		test.resultPage.verifyResults(getYamlValue("productName"));
 	}
 	
-	@Test()
+	@Test
 	public void TestStep3_SelectFirstProduct(){
 		test.resultPage.clickFirstProduct();
 	}
 	
-	@Test()
+	@Test
 	public void TestStep4_AddProductToCart(){
 		test.productDetailsPage.AddTheProductToCart();
 	}
 	
-	@Test()
+	@Test
 	public void TestStep5_VerifyCart(){
 		test.cartPage.verifyCart();
 	}

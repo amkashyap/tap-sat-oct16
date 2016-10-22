@@ -21,18 +21,20 @@ import com.thoughtworks.selenium.Wait.WaitTimedOutException;
 
 public class ProductDetailsActions extends GetPage {
 
-	WebDriver driver;
-	private EventFiringWebDriver e_driver;
+    WebDriver driver;
+    private EventFiringWebDriver e_driver;
 
-	public ProductDetailsActions(WebDriver driver) {
-		super(driver, "HomePage");
-		this.driver = driver;
+    public ProductDetailsActions(WebDriver driver) {
+        super(driver, "HomePage");
+        this.driver = driver;
 
-	}
+    }
 
-	public void AddTheProductToCart() {
-		// TODO Auto-generated method stub
-		
-	}
+    public void AddTheProductToCart() {
+        // TODO Auto-generated method stub
+        switchToNewWindow();
+        element("addToCart").click();
+
+    }
 
 }
